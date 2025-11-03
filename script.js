@@ -758,11 +758,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (btnCarrinho) btnCarrinho.addEventListener('click', () => {
         carrinhoSidebar.classList.add('ativo');
+        document.body.classList.add('carrinho-aberto');
+        const backdrop = document.getElementById('carrinho-backdrop');
+        if (backdrop) backdrop.classList.add('ativo');
         setTimeout(() => {
             if (carrinhoFechar) carrinhoFechar.focus();
         }, 100);
     });
-    if (carrinhoFechar) carrinhoFechar.addEventListener('click', () => carrinhoSidebar.classList.remove('ativo'));
+    if (carrinhoFechar) carrinhoFechar.addEventListener('click', () => {
+        carrinhoSidebar.classList.remove('ativo');
+        document.body.classList.remove('carrinho-aberto');
+        const backdrop = document.getElementById('carrinho-backdrop');
+        if (backdrop) backdrop.classList.remove('ativo');
+    });
     
     if (carrinhoSidebar) {
         let touchStartXCart = 0;
@@ -780,9 +788,23 @@ document.addEventListener('DOMContentLoaded', function() {
         function handleCartSwipe() {
             if (touchEndXCart > touchStartXCart + 80) {
                 carrinhoSidebar.classList.remove('ativo');
+                document.body.classList.remove('carrinho-aberto');
+                const backdrop = document.getElementById('carrinho-backdrop');
+                if (backdrop) backdrop.classList.remove('ativo');
             }
         }
     }
+    
+    // Fecha a sidebar ao clicar no backdrop
+    const backdrop = document.getElementById('carrinho-backdrop');
+    if (backdrop) {
+        backdrop.addEventListener('click', () => {
+            carrinhoSidebar.classList.remove('ativo');
+            document.body.classList.remove('carrinho-aberto');
+            backdrop.classList.remove('ativo');
+        });
+    }
+    
     if (btnFinalizar) {
         btnFinalizar.addEventListener('click', () => {
             setTimeout(() => {
