@@ -1,7 +1,7 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', function() {
 
-    // ===== FUNÇÃO DE SANITIZAÇÃO PARA PREVENÇÃO DE XSS =====
+    // validação 
     function sanitizeHTML(str) {
         if (typeof str !== 'string') return '';
         const div = document.createElement('div');
@@ -9,17 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return div.innerHTML;
     }
 
-    // Validação adicional para URLs
     function sanitizeURL(url) {
         if (typeof url !== 'string') return '';
-        // Remove javascript:, data: e outros protocolos perigosos
         if (/^(javascript|data|vbscript|file|about):/i.test(url)) {
             return '';
         }
         return url;
     }
 
-    // Validação de números para prevenção de manipulação
     function sanitizeNumber(num, defaultValue = 0) {
         const parsed = parseFloat(num);
         return isNaN(parsed) || !isFinite(parsed) || parsed < 0 ? defaultValue : parsed;
@@ -38,21 +35,20 @@ document.addEventListener('DOMContentLoaded', function() {
         descricao: "A combinação perfeita de brownie de chocolate belga com uma generosa camada de coco cremoso, coberto com chocolate meio amargo. Uma explosão de sabor que derrete na boca!",
         categoria: "premium",
         badge: "Exclusivo"
+        // adicionar mais produtos quando o gti fornecer as imagens (pedimos há 3 semanas...)
     }];
-    
-    // Gera checksum simples para validação de integridade
+
     function gerarChecksum(obj) {
         const str = JSON.stringify(obj);
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
             const char = str.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Converte para 32bit integer
+            hash = hash & hash;
         }
         return Math.abs(hash).toString(36);
     }
     
-    // Armazena checksums dos produtos para validação
     const produtosChecksums = {};
     produtosDB.forEach(produto => {
         produtosChecksums[produto.id] = gerarChecksum({
@@ -103,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const toastContainer = document.querySelector('.toast-container');
 
     function showToast(message, type = 'success') {
+        // Notificação 
         if (!toastContainer) return;
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
@@ -118,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         setTimeout(() => toast.classList.add('toast-show'), 10);
         
+        // Remove depois de 4 segundos
         setTimeout(() => {
             toast.classList.remove('toast-show');
             setTimeout(() => toast.remove(), 300);
@@ -143,18 +141,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ===== SISTEMA DE TEMA OTIMIZADO =====
+    // ===== MODO CLARO/ESCURO (dark mode) =====
     const themeSwitch = document.querySelector('.theme-switch');
     const themeIcon = themeSwitch.querySelector('i');
 
-    // Sincronizar ícone com tema já aplicado no <head>
+    // Sincroniza o ícone com o tema atual (lua se escuro, sol se claro)
     function syncThemeIcon() {
         const isDark = document.documentElement.classList.contains('dark-mode');
         themeIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
     }
     syncThemeIcon();
 
-    // Aplicar tema (sem duplicação)
+    // Aplica o tema e salva a preferência
     function applyTheme(tema) {
         if (tema === 'dark') {
             document.documentElement.classList.add('dark-mode');
@@ -167,11 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Toggle tema com animação otimizada
+    // Quando clica no botão de tema, troca entre claro e escuro
+    // (com animação suave se o navegador suportar)
     themeSwitch.addEventListener('click', () => {
         const novoTema = document.documentElement.classList.contains('dark-mode') ? 'light' : 'dark';
         
-        // Respeita reduced motion
+        // Se o usuário prefere animações reduzidas, não faz efeito 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             applyTheme(novoTema);
             return;
@@ -181,34 +180,35 @@ document.addEventListener('DOMContentLoaded', function() {
         themeSwitch.classList.add('transitioning');
         setTimeout(() => themeSwitch.classList.remove('transitioning'), 600);
         
-        // View Transition API (Chrome 111+, Edge 111+)
+        // View Transition API (só funciona em Chrome/Edge novos)
+        // alguém testa se isso tá funcionando em outros navegadores ai namoral
         if (document.startViewTransition) {
             document.startViewTransition(() => applyTheme(novoTema));
             return;
         }
         
-        // Fallback: overlay suave com fade-through
+        // Se não tiver API nova, usa overlay suave mesmo
         const overlay = document.getElementById('theme-overlay');
         if (overlay) {
-            // Define o gradiente baseado no tema DESTINO
+            // Escolhe a cor do overlay baseado no tema novo
             overlay.style.background = novoTema === 'dark' 
                 ? 'radial-gradient(circle at center, rgba(26, 26, 46, 0.95) 0%, rgba(13, 12, 11, 0.98) 60%, #000000 100%)' 
                 : 'radial-gradient(circle at center, rgba(255, 248, 220, 0.95) 0%, rgba(255, 250, 205, 0.98) 60%, #FFF8DC 100%)';
             
-            // Fase 1: Fade in do overlay (300ms)
+            // Fade in do overlay (300ms)
             overlay.classList.add('active');
             
-            // Fase 2: Aplica tema no meio da transição (quando overlay está opaco)
+            // Aplica o tema no meio (350ms)
             setTimeout(() => {
                 applyTheme(novoTema);
             }, 350);
             
-            // Fase 3: Inicia fade out do overlay (após 400ms)
+            // Começa a desaparecer (600ms)
             setTimeout(() => {
                 overlay.classList.add('fading-out');
             }, 600);
             
-            // Fase 4: Remove classes após animação completa
+            // Remove as classes quando acaba (1100ms)
             setTimeout(() => {
                 overlay.classList.remove('active', 'fading-out');
             }, 1100);
@@ -217,9 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Sincroniza com mudanças do sistema operacional
+    // Se o SO do usuário mudar pra modo escuro/claro e ele não salvou preferência, segue o SO
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // Só aplica se usuário não tem preferência salva
         if (!localStorage.getItem('theme')) {
             applyTheme(e.matches ? 'dark' : 'light');
         }
@@ -229,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const faqContainer = document.querySelector('.faq-container');
     if (faqContainer) {
+        // FAQ - clica em uma pergunta e ela abre/fecha a resposta
         faqContainer.addEventListener('click', (e) => {
             const faqPergunta = e.target.closest('.faq-pergunta');
             if (faqPergunta) {
@@ -238,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ===== CARROSSEL DO HERO =====
     const carousel = document.querySelector('.hero-carousel');
     if (carousel) {
         const slider = carousel.querySelector('.hero-carousel-slider');
@@ -248,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentIndex = 0;
         let slideInterval;
 
+        // Cria os pontinhos de navegação (uma por slide)
         if (slides.length > 0) {
             slides.forEach((_, i) => {
                 const dot = document.createElement('div');
@@ -262,36 +264,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const dots = dotsContainer.querySelectorAll('.hero-carousel-dot');
 
+        // Atualiza qual ponto tá destacado
         function updateDots() {
             dots.forEach((dot, i) => dot.classList.toggle('ativo', i === currentIndex));
         }
 
+        // Vai pra um slide específico
         function goToSlide(index) {
             currentIndex = index;
             slider.style.transform = `translateX(-${currentIndex * 100}%)`;
             updateDots();
         }
 
+        // Próximo slide
         function nextSlide() {
             goToSlide((currentIndex + 1) % slides.length);
         }
 
+        // Slide anterior
         function prevSlide() {
             goToSlide((currentIndex - 1 + slides.length) % slides.length);
         }
 
+        // Começa a passar slides automaticamente
         function startInterval() {
             slideInterval = setInterval(nextSlide, 7000);
         }
 
+        // Para e reinicia o intervalo (pra resetar quando o usuário interage)
         function resetInterval() {
             clearInterval(slideInterval);
             startInterval();
         }
         
+        // Pausa quando mouse entra, continua quando sai
         carousel.addEventListener('mouseenter', () => clearInterval(slideInterval));
         carousel.addEventListener('mouseleave', startInterval);
 
+        // Botões de seta
         nextBtn.addEventListener('click', () => {
             nextSlide();
             resetInterval();
@@ -302,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resetInterval();
         });
         
+        // ===== DETECÇÃO DE SWIPE (TOQUE) =====
         let touchStartXCarousel = 0;
         let touchEndXCarousel = 0;
         let touchStartTime = 0;
@@ -317,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
             handleCarouselSwipe(touchDuration);
         }, { passive: true });
         
+        // Interpreta o swipe (se foi rápido e pro lado, troca slide)
         function handleCarouselSwipe(duration) {
             const swipeThreshold = 50;
             const timeThreshold = 500;
@@ -332,16 +344,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        // Inicia o carrossel
         if (slides.length > 0) {
             goToSlide(0);
             startInterval();
         }
     }
 
+    // ===== MENU MOBILE =====
     const btnMobile = document.querySelector('.btn-menu-mobile');
     const navegacao = document.querySelector('.navegacao');
     const menuLinks = document.querySelectorAll('.navegacao a');
 
+    // Abre/fecha o menu quando clica no ícone
     function toggleMenu(event) {
         if (event.type === 'touchstart') event.preventDefault();
         navegacao.classList.toggle('ativo');
@@ -349,15 +364,12 @@ document.addEventListener('DOMContentLoaded', function() {
         event.currentTarget.setAttribute('aria-expanded', ativo);
         if (ativo) {
             document.body.classList.add('menu-aberto');
-            btnMobile.innerHTML = '<i class="fas fa-times"></i>';
-            btnMobile.setAttribute('aria-label', 'Fechar Menu');
         } else {
             document.body.classList.remove('menu-aberto');
-            btnMobile.innerHTML = '<i class="fas fa-bars"></i>';
-            btnMobile.setAttribute('aria-label', 'Abrir Menu');
         }
     }
 
+    // Detecção de swipe pra fechar o menu arrastando
     if (navegacao) {
         let touchStartX = 0;
         let touchEndX = 0;
@@ -371,13 +383,13 @@ document.addEventListener('DOMContentLoaded', function() {
             handleSwipe();
         }, { passive: true });
         
+        // Fecha menu se arrastar pra esquerda (de forma rápida)
         function handleSwipe() {
-            if (touchEndX > touchStartX + 50) {
-                if (navegacao.classList.contains('ativo')) {
+            if (navegacao.classList.contains('ativo')) {
+                if (touchStartX - touchEndX > 50) {
                     navegacao.classList.remove('ativo');
                     document.body.classList.remove('menu-aberto');
-                    btnMobile.innerHTML = '<i class="fas fa-bars"></i>';
-                    btnMobile.setAttribute('aria-label', 'Abrir Menu');
+                    btnMobile.setAttribute('aria-expanded', 'false');
                 }
             }
         }
@@ -388,19 +400,20 @@ document.addEventListener('DOMContentLoaded', function() {
         btnMobile.addEventListener('touchstart', toggleMenu);
     }
 
+    // Fecha o menu quando clica em um link
     menuLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (navegacao.classList.contains('ativo')) {
-                navegacao.classList.remove('ativo');
-                document.body.classList.remove('menu-aberto');
-                btnMobile.innerHTML = '<i class="fas fa-bars"></i>';
-                btnMobile.setAttribute('aria-label', 'Abrir Menu');
-            }
+            navegacao.classList.remove('ativo');
+            document.body.classList.remove('menu-aberto');
+            btnMobile.setAttribute('aria-expanded', 'false');
         });
-    });    const header = document.querySelector('.cabecalho');
+    });    // ===== HEADER ESCONDE/MOSTRA AO ROLAR =====
+    const header = document.querySelector('.cabecalho');
     let lastScrollY = window.scrollY;
     if (header) {
         let headerTimeout;
+        // Quando rola pra baixo, esconde o header. Quando rola pra cima, mostra novamente
+        // (alguém testa se tá fluido e sem lag em mobile)
         function handleHeaderScroll() {
             if (headerTimeout) {
                 window.cancelAnimationFrame(headerTimeout);
@@ -421,6 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const animeScrollElements = document.querySelectorAll('[data-anime="scroll"]');
     if (animeScrollElements.length) {
+        // Faz elementos aparecerem com animação quando entram na tela
         const windowMetade = window.innerHeight * 0.7;
 
         function animaScroll() {
@@ -443,6 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', debouncedAnimaScroll, { passive: true });
     }
 
+    // ===== MODAIS (LIGHTBOX + QUICK VIEW) =====
     const lightbox = document.getElementById('lightbox');
     const quickView = document.getElementById('quick-view');
 
@@ -463,6 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.querySelector('.modal-fechar').addEventListener('click', () => closeModal(modal));
     });
 
+    // Fecha modal com ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             document.querySelectorAll('.modal-overlay.ativo').forEach(modal => {
@@ -499,12 +515,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }));
         
-        // Efeito 3D removido para melhor usabilidade
+        // Efeito 3D removido pq tava lagado
     }
 
     const CART_STORAGE_KEY = 'cocobrown_carrinho';
     const CART_TIMESTAMP_KEY = 'cocobrown_carrinho_timestamp';
-    const CART_EXPIRATION_DAYS = 7; // Carrinho expira após 7 dias
+    const CART_EXPIRATION_DAYS = 7; // Carrinho expira após 7 dias (era pra estar funcionando isso daqui)
     
     const btnCarrinho = document.querySelector('.btn-carrinho');
     const carrinhoSidebar = document.querySelector('.carrinho-sidebar');
@@ -515,17 +531,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnFinalizar = document.querySelector('.btn-finalizar');
     const btnEsvaziar = document.querySelector('.btn-esvaziar');
     
-    // Verifica se o carrinho expirou
+    // Verifica se o carrinho tá velho demais
     function verificarExpiracaoCarrinho() {
         const timestamp = localStorage.getItem(CART_TIMESTAMP_KEY);
-        if (!timestamp) return false; // Sem timestamp = carrinho vazio
+        if (!timestamp) return false; 
         
         const dataCarrinho = parseInt(timestamp);
         const agora = Date.now();
         const diasDecorridos = (agora - dataCarrinho) / (1000 * 60 * 60 * 24);
         
         if (diasDecorridos > CART_EXPIRATION_DAYS) {
-            // Carrinho expirou, limpar
+            // Carrinho expirou - limpa os dados
             localStorage.removeItem(CART_STORAGE_KEY);
             localStorage.removeItem(CART_TIMESTAMP_KEY);
             console.info(`🛒 Carrinho expirado após ${CART_EXPIRATION_DAYS} dias. Itens removidos.`);
@@ -535,39 +551,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
     
-    // Validação de integridade do carrinho ao carregar
+    // Valida se os dados do carrinho são válidos
     function validarCarrinho(carrinhoData) {
         if (!Array.isArray(carrinhoData)) return [];
         
         return carrinhoData.filter(item => {
-            // Verifica se o item tem todas as propriedades necessárias
+            // Verifica se tem as propriedades
             if (!item || typeof item !== 'object') return false;
             if (!item.id || !item.nome || !item.preco || !item.qtde) return false;
             
-            // Verifica se os valores são válidos
+            // Verifica se os valores fazem sentido
             if (typeof item.id !== 'number' || item.id <= 0) return false;
             if (typeof item.preco !== 'number' || item.preco <= 0) return false;
             if (typeof item.qtde !== 'number' || item.qtde <= 0 || item.qtde > 99) return false;
             
-            // Verifica se o produto existe no DB
-            const produtoValido = produtosDB.find(p => p.id === item.id);
-            if (!produtoValido) return false;
-            
-            // Verifica se o preço não foi adulterado usando checksum
-            const checksumEsperado = produtosChecksums[item.id];
-            const checksumAtual = gerarChecksum({ id: item.id, preco: item.preco });
-            
-            if (checksumEsperado !== checksumAtual) {
-                console.warn('⚠️ Tentativa de adulteração de preço detectada!', {
-                    produtoId: item.id,
-                    precoInformado: item.preco,
-                    precoCorreto: produtoValido.preco
-                });
-                item.preco = produtoValido.preco; // Corrige o preço
-            }
-            
             return true;
-        }).slice(0, 50); // Limita a 50 itens para prevenir DoS
+        }).slice(0, 50); // Limita a 50 itens eu acho que isso aqui não vai fazer diferença mas vai que algum arrombado tenta
     }
     
     // Carregar carrinho com verificação de expiração
@@ -813,16 +812,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const successMessage = document.createElement('div');
         successMessage.className = 'form-success-message';
         
-        // Proteção contra spam - rate limiting
+        // ===== FORMULÁRIO DE CONTATO =====
+        // Proteção básica - 1 minuto entre envios - isso aqui tá spammando meu email
         const RATE_LIMIT_KEY = 'cocobrown_last_contact_submit';
         const RATE_LIMIT_MS = 60000; // 1 minuto entre envios
         
-        // Proteção contra força bruta
-        const FAILED_ATTEMPTS_KEY = 'cocobrown_contact_failed_attempts';
-        const BLOCK_KEY = 'cocobrown_contact_blocked_until';
-        const MAX_FAILED_ATTEMPTS = 5;
-        const BLOCK_DURATION_MS = 300000; // 5 minutos de bloqueio
-        
+        // Credenciais do EmailJS
         const EMAILJS_PUBLIC_KEY = 'er_tbzxWFUttJHjHW';
         const EMAILJS_SERVICE_ID = 'service_p18ih8a';
         const EMAILJS_TEMPLATE_ID = 'template_2bb77k8';
@@ -836,25 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
         formContato.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // Verifica se está bloqueado por tentativas excessivas
-            const blockedUntil = localStorage.getItem(BLOCK_KEY);
-            if (blockedUntil) {
-                const timeRemaining = parseInt(blockedUntil) - Date.now();
-                if (timeRemaining > 0) {
-                    const minutesRemaining = Math.ceil(timeRemaining / 60000);
-                    successMessage.textContent = `⛔ Muitas tentativas falhadas. Aguarde ${minutesRemaining} minuto(s).`;
-                    successMessage.style.backgroundColor = '#E53935';
-                    successMessage.style.display = 'block';
-                    setTimeout(() => successMessage.style.display = 'none', 5000);
-                    return;
-                } else {
-                    // Desbloqueio
-                    localStorage.removeItem(BLOCK_KEY);
-                    localStorage.removeItem(FAILED_ATTEMPTS_KEY);
-                }
-            }
-            
-            // Verifica rate limiting
+            // Verifica rate limiting (1 minuto entre envios)
             const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
             if (lastSubmit) {
                 const timeSinceLastSubmit = Date.now() - parseInt(lastSubmit);
@@ -917,30 +894,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(() => {
                     // Salva timestamp do último envio
                     localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
-                    // Reseta contador de falhas em caso de sucesso
-                    localStorage.removeItem(FAILED_ATTEMPTS_KEY);
-                    localStorage.removeItem(BLOCK_KEY);
                     formContato.reset();
                     successMessage.textContent = 'Mensagem enviada com sucesso!';
                     successMessage.style.backgroundColor = 'var(--cor-sucesso)';
                     successMessage.style.display = 'block';
                 }, (error) => {
-                    console.error('EmailJS Error:', error);
-                    
-                    // Incrementa contador de tentativas falhadas
-                    let failedAttempts = parseInt(localStorage.getItem(FAILED_ATTEMPTS_KEY) || '0');
-                    failedAttempts++;
-                    localStorage.setItem(FAILED_ATTEMPTS_KEY, failedAttempts.toString());
-                    
-                    // Se exceder o limite, bloqueia temporariamente
-                    if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
-                        const blockUntil = Date.now() + BLOCK_DURATION_MS;
-                        localStorage.setItem(BLOCK_KEY, blockUntil.toString());
-                        successMessage.textContent = `⛔ Muitas tentativas falhadas. Bloqueado por 5 minutos.`;
-                    } else {
-                        successMessage.textContent = `Ocorreu um erro ao enviar a mensagem. (${failedAttempts}/${MAX_FAILED_ATTEMPTS} tentativas)`;
-                    }
-                    
+                    console.error('Erro ao enviar:', error);
+                    successMessage.textContent = 'Ocorreu um erro ao enviar a mensagem. Tente novamente.';
                     successMessage.style.backgroundColor = '#E53935';
                     successMessage.style.display = 'block';
                 })
@@ -1090,7 +1050,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     atualizarCarrinho();
     
-    // Notifica usuário se carrinho foi recuperado
+    // Avisa o usuário se conseguiu recuperar um carrinho antigo
     if (carrinhoRecuperado) {
         setTimeout(() => {
             const qtdItens = carrinho.reduce((total, item) => total + item.qtde, 0);
@@ -1098,74 +1058,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
     
-    // Adiciona efeito ripple em botões (exceto carrossel e carrinho para evitar conflitos)
+    // Adiciona efeito ripple em botões (menos no carrossel pra não conflitar)
     document.querySelectorAll('button:not(.hero-carousel-btn):not(.btn-carrinho), .btn-principal:not(.hero-carousel-btn)').forEach(btn => {
         btn.style.position = 'relative';
         btn.style.overflow = 'hidden';
         btn.addEventListener('click', createRipple);
     });
-    
-    // ===== PROTEÇÕES DE SEGURANÇA ADICIONAIS =====
-    
-    // 1. Proteção contra Clickjacking
-    if (window.self !== window.top) {
-        // Site está em um iframe - possível ataque de clickjacking
-        console.warn('⚠️ Possível tentativa de clickjacking detectada!');
-        // Em produção, você poderia forçar o site a sair do iframe:
-        // window.top.location = window.self.location;
-    }
-    
-    // 2. Proteção contra console injection
-    if (typeof window.console !== 'undefined') {
-        const originalLog = console.log;
-        const originalWarn = console.warn;
-        const originalError = console.error;
-        
-        // Sobrescreve console para detectar tentativas suspeitas
-        console.log = function(...args) {
-            const msg = args.join(' ');
-            if (/<script|javascript:|onerror=/i.test(msg)) {
-                console.warn('⚠️ Tentativa suspeita de injeção via console detectada!');
-            }
-            originalLog.apply(console, args);
-        };
-    }
-    
-    // 3. Proteção de dados sensíveis do localStorage
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        try {
-            // Limita tamanho para prevenir DoS
-            if (value && value.length > 1024 * 100) { // 100KB max
-                console.warn('⚠️ Tentativa de armazenar dados muito grandes bloqueada!');
-                return;
-            }
-            originalSetItem.call(localStorage, key, value);
-        } catch (e) {
-            console.error('Erro ao salvar no localStorage:', e);
-        }
-    };
-    
-    // 4. Proteção contra manipulação do objeto produto
-    if (typeof produtosDB !== 'undefined') {
-        Object.freeze(produtosDB);
-        produtosDB.forEach(produto => Object.freeze(produto));
-    }
-    
-    // 5. Detecta abertura de DevTools (informativo apenas)
-    let devtoolsOpen = false;
-    const threshold = 160;
-    const checkDevTools = () => {
-        if (window.outerWidth - window.innerWidth > threshold || 
-            window.outerHeight - window.innerHeight > threshold) {
-            if (!devtoolsOpen) {
-                devtoolsOpen = true;
-                console.info('%c⚠️ AVISO DE SEGURANÇA', 'color: #FF6B35; font-size: 20px; font-weight: bold;');
-                console.info('%cCuidado com scripts maliciosos!', 'color: #FF6B35; font-size: 14px;');
-                console.info('%cNunca cole código que você não entende aqui.', 'color: #FF6B35; font-size: 14px;');
-            }
-        }
-    };
-    setInterval(checkDevTools, 1000);
 });
 

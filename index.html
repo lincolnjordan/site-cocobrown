@@ -5,32 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Meta tags de segurança -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    
-    <!-- Content Security Policy (CSP) - Proteção contra XSS -->
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-        img-src 'self' data: https:;
-        connect-src 'self' https://api.emailjs.com;
-        frame-src https://www.google.com;
-        object-src 'none';
-        base-uri 'self';
-        form-action 'self' https://wa.me;
-    ">
     
     <title>Cocobrown - A Felicidade em Forma de Brownie</title>
     
     <link rel="icon" type="image/x-icon" href="imagens/cocobrownico.ico">
     <link rel="apple-touch-icon" href="imagens/logomarca_upscayl_4x.png">
 
-    <!-- Aplicar tema ANTES de carregar CSS para evitar FOUC -->
     <script>
     (function() {
         'use strict';
@@ -47,8 +29,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -56,12 +38,14 @@
     <div class="preloader">
         <div class="preloader-icon"></div>
     </div>
-
+    
     <header class="cabecalho">
         <div class="container">
             <a href="#inicio" class="logo">
+                <!-- Pqp essa logo tá uma merda) -->
                 <img src="imagens/logomarca_upscayl_4x.png" alt="Cocobrown Logo" class="logo-img">
             </a>
+            <!-- Tem que fazer teste em celular diferente -->
             <nav class="navegacao" id="menu-navegacao" data-menu="suave">
                 <ul class="menu-links">
                     <li><a href="#inicio">Início</a></li>
@@ -72,33 +56,41 @@
                     <li><a href="#contato">Contato</a></li>
                 </ul>
             </nav>
+            <!-- Botões do header: tema (claro/escuro) + carrinho -->
             <div class="header-icones">
+                <!-- tema -->
                 <button class="theme-switch" aria-label="Mudar Tema"><i class="fas fa-sun"></i></button>
+                <!-- carrinho -->
                 <button class="btn-carrinho" aria-label="Abrir Carrinho"><i class="fas fa-shopping-cart"></i><span class="contagem-carrinho">0</span></button>
+                <!-- mobile -->
                 <button class="btn-menu-mobile" aria-label="Abrir Menu" aria-haspopup="true" aria-controls="menu-navegacao" aria-expanded="false"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
 
     <main>
+        <!-- isso aqui definitivamente não tá 100% otimizado mas fds -->
         <section id="inicio" class="hero-carousel">
             <div class="hero-carousel-slider">
                 <div class="hero-carousel-slide">
                     <div class="hero-carousel-slide-content">
                         <h1>Brownie Prestígio Original</h1>
-                        <p>A combinação perfeita de chocolate belga e coco cremoso que conquistou o Brasil. Experimente nossa receita exclusiva!</p><a href="#nossos-brownies" class="btn-principal">Peça Agora</a>
+                        <p>A combinação perfeita de chocolate belga e coco cremoso que conquistou o Brasil. Experimente nossa receita exclusiva!</p>
+                        <a href="#nossos-brownies" class="btn-principal">Peça Agora</a>
                     </div>
                 </div>
                 <div class="hero-carousel-slide">
                     <div class="hero-carousel-slide-content">
                         <h1>Feito com Ingredientes Premium</h1>
-                        <p>Chocolate belga, coco fresco ralado na hora e uma receita secreta que torna cada mordida inesquecível.</p><a href="#nossos-brownies" class="btn-principal">Peça Agora</a>
+                        <p>Chocolate belga, coco fresco ralado na hora e uma receita secreta que torna cada mordida inesquecível.</p>
+                        <a href="#nossos-brownies" class="btn-principal">Peça Agora</a>
                     </div>
                 </div>
                 <div class="hero-carousel-slide">
                     <div class="hero-carousel-slide-content">
                         <h1>Entrega Rápida em Assis</h1>
-                        <p>Receba seu brownie fresquinho em casa! Entregamos em toda a cidade de Assis com agilidade e cuidado.</p><a href="#contato" class="btn-principal">Fale Conosco</a>
+                        <p>Receba seu brownie fresquinho em casa! Entregamos em toda a cidade de Assis com agilidade e cuidado.</p>
+                        <a href="#contato" class="btn-principal">Fale Conosco</a>
                     </div>
                 </div>
             </div>
@@ -106,7 +98,14 @@
             <button class="hero-carousel-btn next" aria-label="Próximo Slide"><i class="fas fa-chevron-right"></i></button>
             <div class="hero-carousel-dots"></div>
         </section>
+                </div>
+            </div>
+            <button class="hero-carousel-btn prev" aria-label="Slide Anterior"><i class="fas fa-chevron-left"></i></button>
+            <button class="hero-carousel-btn next" aria-label="Próximo Slide"><i class="fas fa-chevron-right"></i></button>
+            <div class="hero-carousel-dots"></div>
+        </section>
 
+        <!-- Vtnc gti -->
         <section id="nossos-brownies" class="secao-produtos" data-anime="scroll">
             <div class="container">
                 <h2>Nosso Brownie Prestígio</h2>
@@ -120,20 +119,27 @@
         <section id="processo" data-anime="scroll">
             <div class="container">
                 <h2>O Segredo do Prestígio Perfeito</h2>
+                
                 <div class="processo-grid">
-                    <div class="processo-item"><i class="fas fa-seedling"></i>
+                    <div class="processo-item">
+                        <i class="fas fa-seedling"></i>
                         <h3>Coco Fresco Selecionado</h3>
+                        
                         <p class="processo-descricao">Utilizamos apenas coco fresco, ralado na hora, para garantir aquele sabor autêntico e marcante.</p>
                     </div>
-                    <div class="processo-item"><i class="fas fa-certificate"></i>
+                    <div class="processo-item">
+                        <i class="fas fa-certificate"></i>
                         <h3>Chocolate Belga Premium</h3>
                         <p class="processo-descricao">Chocolate belga de primeira linha, com 70% de cacau, garante uma massa rica e aveludada.</p>
                     </div>
-                    <div class="processo-item"><i class="fas fa-heart"></i>
+                    <div class="processo-item">
+                        <i class="fas fa-heart"></i>
                         <h3>Receita Exclusiva</h3>
+                       
                         <p class="processo-descricao">Nossa receita secreta, desenvolvida ao longo de anos, cria o equilíbrio perfeito entre chocolate e coco.</p>
                     </div>
-                    <div class="processo-item"><i class="fas fa-truck"></i>
+                    <div class="processo-item">
+                        <i class="fas fa-truck"></i>
                         <h3>Entrega Expressa</h3>
                         <p class="processo-descricao">Assamos sob demanda e entregamos fresquinho, para você aproveitar no ponto ideal de sabor.</p>
                     </div>
@@ -141,32 +147,46 @@
             </div>
         </section>
 
+        <!-- Cara, eu não faço ideia do que colocar aqui pq ngm fala porra nenhuma -->
         <section id="quem-faz" class="secao-equipe">
             <div class="container">
                 <h2>Quem Faz a Magia</h2>
+                <!-- cade as fotos? -->
                 <div class="equipe-grid">
-                    <div class="membro-card" data-anime="scroll"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23E8DED2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%235D4037'%3E%F0%9F%91%A8%E2%80%8D%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" alt="Foto do membro da equipe">
-                        <h3>Lorem Ipsum</h3>
-                        <h4>Lorem Dolor</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+                    <div class="membro-card" data-anime="scroll">
+                        <!-- arrombado 1 -->
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23E8DED2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%235D4037'%3E%F0%9F%91%A8%E2%80%8D%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" alt="Foto do membro da equipe">
+                        <!-- nomedoarrombado1-->
+                        <h3>Nome Aqui</h3>
+                        <!-- mesma coisa -->
+                        <h4>Função/Papel</h4>
+                        <p>Descrição breve do membro da equipe e sua contribuição na Cocobrown.</p>
                     </div>
-                    <div class="membro-card" data-anime="scroll"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23E8DED2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%235D4037'%3E%F0%9F%91%A9%E2%80%8D%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" alt="Foto do membro da equipe">
-                        <h3>Lorem Ipsum</h3>
-                        <h4>Lorem Dolor</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+                    <div class="membro-card" data-anime="scroll">
+                        <!-- arrombado2 -->
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23E8DED2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%235D4037'%3E%F0%9F%91%A9%E2%80%8D%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" alt="Foto do membro da equipe">
+                        <h3>Nome Aqui</h3>
+                        <!-- nomedoarrombado2 -->
+                        <h4>Função/Papel</h4>
+                        <p>Descrição breve do membro da equipe e sua contribuição na Cocobrown.</p>
                     </div>
-                    <div class="membro-card" data-anime="scroll"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23E8DED2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%235D4037'%3E%F0%9F%91%A8%E2%80%8D%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" alt="Foto do membro da equipe">
-                        <h3>Lorem Ipsum</h3>
-                        <h4>Lorem Dolor</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+                    <div class="membro-card" data-anime="scroll">
+                        <!-- 333333333333333333333 -->
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23E8DED2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%235D4037'%3E%F0%9F%91%A8%E2%80%8D%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" alt="Foto do membro da equipe">
+                        <h3>Nome Aqui</h3>
+                        <!-- seila cara -->
+                        <h4>Função/Papel</h4>
+                        <p>Descrição breve do membro da equipe e sua contribuição na Cocobrown.</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Nem sei se vão dar feedback nisso aqui, é tudo fake mesmo -->
         <section id="avaliacoes">
             <div class="container">
                 <h2>O Que Nossos Clientes Dizem</h2>
+                <!-- era pro localstorage estar funcionando em todos navegadores(eu só testei no chrome e no edge) -->
                 <div class="avaliacoes-grid" id="avaliacoes-grid">
                     <div class="avaliacao-card">
                         <div class="avaliacao-estrelas"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
@@ -184,6 +204,7 @@
                         <h4>- Ricardo Almeida</h4>
                     </div>
                 </div>
+                <!-- isso aqui vai pegar as avaliações do localstorage, se alguem for mexer, não fode o javascript pq tá tudo certo la -->
                 <div class="form-avaliacao-container" data-anime="scroll">
                     <h3>Deixe sua Avaliação</h3>
                     <form id="form-add-avaliacao" autocomplete="on">
@@ -198,9 +219,11 @@
             </div>
         </section>
 
+
         <section id="faq" data-anime="scroll">
             <div class="container">
                 <h2>Perguntas Frequentes</h2>
+
                 <div class="faq-container">
                     <div class="faq-item">
                         <div class="faq-pergunta">Quais ingredientes vocês usam?</div>
@@ -230,13 +253,20 @@
             </div>
         </section>
 
+        <!-- gambiarra -->
         <section id="contato" class="secao-contato" data-anime="scroll">
             <div class="container">
                 <h2>Contato e Localização</h2>
                 <div class="contato-wrapper">
                     <div class="contato-form">
-                        <h3>Fale Conosco</h3>
-                        <form id="form-contato" autocomplete="on"><input type="text" name="nome" placeholder="Seu Nome" minlength="3" maxlength="100" autocomplete="name" required><input type="email" name="email" placeholder="Seu E-mail" autocomplete="email" required><input type="tel" name="telefone" placeholder="Seu Telefone (Opcional)" pattern="[\(\)\s\-0-9]+" autocomplete="tel"><textarea name="mensagem" rows="5" placeholder="Sua Mensagem" minlength="10" maxlength="1000" autocomplete="off" required></textarea><button type="submit" class="btn-principal">Enviar Mensagem</button></form>
+                        <h3>Fale Conosco</h3>>
+                        <form id="form-contato" autocomplete="on">
+                            <input type="text" name="nome" placeholder="Seu Nome" minlength="3" maxlength="100" autocomplete="name" required>
+                            <input type="email" name="email" placeholder="Seu E-mail" autocomplete="email" required>
+                            <input type="tel" name="telefone" placeholder="Seu Telefone (Opcional)" pattern="[\(\)\s\-0-9]+" autocomplete="tel">
+                            <textarea name="mensagem" rows="5" placeholder="Sua Mensagem" minlength="10" maxlength="1000" autocomplete="off" required></textarea>
+                            <button type="submit" class="btn-principal">Enviar Mensagem</button>
+                        </form>
                     </div>
                     <div class="contato-mapa">
                         <h3>Nossa Localização</h3>
@@ -252,10 +282,13 @@
         </section>
     </main>
 
+    <!-- Cade o instagram dessa bosta? -->
     <footer class="rodape">
         <div class="container">
             <div class="rodape-social">
-                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Link para o Instagram"><i class="fab fa-instagram"></i></a><a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Link para o Facebook"><i class="fab fa-facebook-f"></i></a><a href="https://wa.me/5518991698487" target="_blank" rel="noopener noreferrer" aria-label="Link para o WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Link para o Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Link para o Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://wa.me/5518991698487" target="_blank" rel="noopener noreferrer" aria-label="Link para o WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
             <p>&copy; 2025 Cocobrown. Todos os direitos reservados.</p>
         </div>
@@ -272,7 +305,7 @@
     </div>
     <a href="https://wa.me/5518991698487?text=Ol%C3%A1%21%20Gostaria%20de%20fazer%20um%20pedido." class="btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Fale conosco pelo WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
-    <!-- Overlay reutilizável para transição de tema -->
+    <!-- overlay-->
     <div id="theme-overlay" class="theme-overlay" aria-hidden="true"></div>
 
     <div id="lightbox" class="modal-overlay">

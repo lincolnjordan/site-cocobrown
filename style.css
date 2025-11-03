@@ -1,4 +1,5 @@
 :root {
+    /* Cores do site (escolhidas pq achei bonitas, tá?) */
     --cor-primaria: #3E2723;              
     --cor-secundaria: #FFF9E6;            
     --cor-destaque: #FF6B35;              
@@ -10,7 +11,7 @@
     --cor-branco: #FFFFFF;
     --cor-sucesso: #00C896;
     
-    /* Z-Index Hierarchy */
+    /* Z-Index Hierarchy (alguém pediu isso pra não virar um caos) */
     --z-base: 1;
     --z-negative: -1;
     --z-negative-2: -2;
@@ -24,6 +25,8 @@
     --cor-fundo: var(--cor-secundaria);
     --cor-card: var(--cor-branco);
     --cor-borda: #E8E3D6;
+    
+    /* Gradientes (mto bonitos btw) */
     --gradiente-hero: linear-gradient(135deg, #FF6B35 0%, #F7B733 50%, #00B4D8 100%);
     --gradiente-hero-alt: linear-gradient(120deg, #00B4D8 0%, #0096C7 50%, #0077B6 100%);
     --gradiente-card: linear-gradient(180deg, rgba(255,107,53,0.05) 0%, rgba(0,180,216,0.05) 100%);
@@ -31,16 +34,23 @@
     --gradiente-destaque: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
     --gradiente-texto: linear-gradient(135deg, #FF6B35, #00B4D8);
     --gradiente-premium: linear-gradient(135deg, #FFD60A 0%, #FF6B35 50%, #00B4D8 100%);
+    
+    /* Tipografia */
     --fonte-titulos: 'Playfair Display', serif;
     --fonte-corpo: 'Poppins', sans-serif;
+    
+    /* Sombras (aparece mais ou menos dependendo da profundidade) */
     --sombra-suave: 0 8px 32px rgba(255, 107, 53, 0.12);
     --sombra-media: 0 12px 48px rgba(255, 107, 53, 0.18);
     --sombra-forte: 0 20px 60px rgba(255, 107, 53, 0.25);
     --sombra-tropical: 0 8px 32px rgba(0, 180, 216, 0.15);
+    
+    /* Transições (velocidade das animações) */
     --transicao-rapida: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transicao-suave: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 :root.dark-mode {
+    /* Dark mode - cores mais escuras (alguém testa em OLED) */
     --cor-primaria: #FFD6A5;              
     --cor-secundaria: #1A1614;            
     --cor-destaque: #FF8C42;              
@@ -69,7 +79,7 @@
     box-sizing: border-box;
 }
 
-/* Transição suave para mudança de tema em todos os elementos */
+/* Transição suave pra mudança de tema em tudo (bem, quase tudo) */
 *,
 *::before,
 *::after {
@@ -78,7 +88,7 @@
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Elementos que não devem ter transição de tema */
+/* Elementos que NÃO devem transicionar o tema (evita travamento) */
 .hero-carousel,
 .hero-carousel *,
 .preloader,
@@ -115,7 +125,7 @@ html {
     scroll-behavior: smooth;
     font-size: 16px;
     overflow-x: hidden !important;
-    overflow-y: scroll; /* força scrollbar sempre visível */
+    overflow-y: scroll; /* força scrollbar sempre visível pra não ficar pulando a página */
     width: 100%;
     max-width: 100%;
 }
@@ -1068,6 +1078,7 @@ section:nth-of-type(odd) {
 .produtos-filtros {
     display: none; 
 }
+/* Grid dos produtos (só tem um no momento, mas tá preparado pra mais) */
 .produtos-grid {
     display: flex;
     justify-content: center;
@@ -1085,6 +1096,7 @@ section:nth-of-type(odd) {
         padding: 0;
     }
 }
+/* Card individual do produto (quer dizer, do brownie) */
 .produto-card {
     background: var(--cor-card);
     border-radius: 20px;
@@ -2532,7 +2544,7 @@ section *,
     }
 }
 
-/* Remove scrollbar horizontal - compatibilidade total */
+/* Remove scrollbar horizontal */
 html {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE/Edge */
