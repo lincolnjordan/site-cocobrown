@@ -344,12 +344,12 @@ section:nth-of-type(odd) {
     max-width: 100%;
     z-index: var(--z-header);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
-    transform: translateY(0);
     border-bottom: 1px solid color-mix(in srgb, var(--cor-borda) 30%, transparent);
     min-height: 70px;
     display: flex;
     align-items: center;
-    overflow-x: hidden;
+    /* evitar recorte do menu fixo no mobile */
+    overflow: visible;
 }
 .cabecalho::before {
     content: '';
@@ -1636,6 +1636,14 @@ body.carrinho-aberto {
 }
 
 @media (max-width: 992px) {
+    /* Em dispositivos móveis, evitar que o header crie bloco de contenção
+       para elementos position: fixed (menu), removendo o backdrop-blur */
+    .cabecalho {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        /* mantém um fundo sólido para legibilidade */
+        background: color-mix(in srgb, var(--cor-fundo) 92%, transparent);
+    }
     .contato-wrapper {
         grid-template-columns: 1fr;
         gap: 3rem;
@@ -2036,10 +2044,13 @@ body.carrinho-aberto {
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
         transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         padding-top: 8rem;
-        z-index: 1050;
+        /* garantir que fique acima do conteúdo e de overlays não ativos */
+        z-index: var(--z-mobile-menu);
         transform: translateX(100%); /* esconde fora da tela */
     }
     .navegacao.ativo {
+        /* quando aberto, coloca acima até do carrinho/backdrop */
+        z-index: calc(var(--z-cart-sidebar) + 1);
         transform: translateX(0); /* mostra o menu */
     }
     .navegacao .menu-links {

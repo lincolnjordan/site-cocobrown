@@ -365,8 +365,15 @@ document.addEventListener('DOMContentLoaded', function() {
         event.currentTarget.setAttribute('aria-expanded', ativo);
         if (ativo) {
             document.body.classList.add('menu-aberto');
+            // ativa o backdrop quando o menu abre
+            const bd = document.getElementById('carrinho-backdrop');
+            if (bd) bd.classList.add('ativo');
         } else {
             document.body.classList.remove('menu-aberto');
+            // remove o backdrop somente se o carrinho não estiver aberto
+            const bd = document.getElementById('carrinho-backdrop');
+            const carrinhoAberto = document.querySelector('.carrinho-sidebar')?.classList.contains('ativo');
+            if (bd && !carrinhoAberto) bd.classList.remove('ativo');
         }
     }
 
@@ -391,6 +398,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     navegacao.classList.remove('ativo');
                     document.body.classList.remove('menu-aberto');
                     btnMobile.setAttribute('aria-expanded', 'false');
+                    // remove backdrop se o carrinho não estiver aberto
+                    const bd = document.getElementById('carrinho-backdrop');
+                    const carrinhoAberto = document.querySelector('.carrinho-sidebar')?.classList.contains('ativo');
+                    if (bd && !carrinhoAberto) bd.classList.remove('ativo');
                 }
             }
         }
@@ -407,6 +418,9 @@ document.addEventListener('DOMContentLoaded', function() {
             navegacao.classList.remove('ativo');
             document.body.classList.remove('menu-aberto');
             btnMobile.setAttribute('aria-expanded', 'false');
+            const bd = document.getElementById('carrinho-backdrop');
+            const carrinhoAberto = document.querySelector('.carrinho-sidebar')?.classList.contains('ativo');
+            if (bd && !carrinhoAberto) bd.classList.remove('ativo');
         });
     });    // ===== HEADER ESCONDE/MOSTRA AO ROLAR =====
     const header = document.querySelector('.cabecalho');
@@ -487,6 +501,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             if (carrinhoSidebar && carrinhoSidebar.classList.contains('ativo')) {
                 carrinhoSidebar.classList.remove('ativo');
+                document.body.classList.remove('carrinho-aberto');
+                const bd = document.getElementById('carrinho-backdrop');
+                const menuAberto = document.querySelector('.navegacao')?.classList.contains('ativo');
+                if (bd && !menuAberto) bd.classList.remove('ativo');
             }
             if (navegacao && navegacao.classList.contains('ativo') && btnMobile) {
                 toggleMenu({ currentTarget: btnMobile, type: 'click' });
@@ -769,8 +787,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (carrinhoFechar) carrinhoFechar.addEventListener('click', () => {
         carrinhoSidebar.classList.remove('ativo');
         document.body.classList.remove('carrinho-aberto');
-        const backdrop = document.getElementById('carrinho-backdrop');
-        if (backdrop) backdrop.classList.remove('ativo');
+        const bd = document.getElementById('carrinho-backdrop');
+        const menuAberto = document.querySelector('.navegacao')?.classList.contains('ativo');
+        if (bd && !menuAberto) bd.classList.remove('ativo');
     });
     
     if (carrinhoSidebar) {
@@ -790,19 +809,32 @@ document.addEventListener('DOMContentLoaded', function() {
             if (touchEndXCart > touchStartXCart + 80) {
                 carrinhoSidebar.classList.remove('ativo');
                 document.body.classList.remove('carrinho-aberto');
-                const backdrop = document.getElementById('carrinho-backdrop');
-                if (backdrop) backdrop.classList.remove('ativo');
+                const bd = document.getElementById('carrinho-backdrop');
+                const menuAberto = document.querySelector('.navegacao')?.classList.contains('ativo');
+                if (bd && !menuAberto) bd.classList.remove('ativo');
             }
         }
     }
     
-    // Fecha a sidebar ao clicar no backdrop
+    // Fecha painéis ao clicar no backdrop
     const backdrop = document.getElementById('carrinho-backdrop');
     if (backdrop) {
         backdrop.addEventListener('click', () => {
-            carrinhoSidebar.classList.remove('ativo');
-            document.body.classList.remove('carrinho-aberto');
-            backdrop.classList.remove('ativo');
+            // fecha carrinho, se aberto
+            if (carrinhoSidebar && carrinhoSidebar.classList.contains('ativo')) {
+                carrinhoSidebar.classList.remove('ativo');
+                document.body.classList.remove('carrinho-aberto');
+            }
+            // fecha menu mobile, se aberto
+            if (navegacao && navegacao.classList.contains('ativo')) {
+                navegacao.classList.remove('ativo');
+                document.body.classList.remove('menu-aberto');
+                if (btnMobile) btnMobile.setAttribute('aria-expanded', 'false');
+            }
+            // remove backdrop apenas se nenhum painel estiver aberto
+            const aindaTemCarrinho = carrinhoSidebar?.classList.contains('ativo');
+            const aindaTemMenu = navegacao?.classList.contains('ativo');
+            if (!aindaTemCarrinho && !aindaTemMenu) backdrop.classList.remove('ativo');
         });
     }
     
@@ -1079,6 +1111,37 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast(`🛒 Carrinho recuperado! ${qtdItens} ${qtdItens === 1 ? 'item' : 'itens'} ${qtdItens === 1 ? 'aguardando' : 'aguardando'}`, 'success');
         }, 1000);
     }
+
+    // ===== RESPONSIVIDADE: reset de estados ao voltar para desktop =====
+    function resetMobilePanelsIfDesktop() {
+        const isDesktop = window.matchMedia('(min-width: 993px)').matches;
+        const backdropEl = document.getElementById('carrinho-backdrop');
+
+        if (isDesktop) {
+            // Fecha menu mobile se estiver aberto
+            if (navegacao && navegacao.classList.contains('ativo')) {
+                navegacao.classList.remove('ativo');
+                document.body.classList.remove('menu-aberto');
+                if (btnMobile) btnMobile.setAttribute('aria-expanded', 'false');
+            }
+
+            // Mantém o carrinho se estiver aberto; caso contrário, remove backdrop
+            const carrinhoAberto = carrinhoSidebar?.classList.contains('ativo');
+            if (backdropEl && !carrinhoAberto) backdropEl.classList.remove('ativo');
+        }
+    }
+
+    // Debounce simples para evitar excesso de chamadas em resize
+    let resizeTimeout;
+    function onResizeDebounced() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resetMobilePanelsIfDesktop, 120);
+    }
+
+    window.addEventListener('resize', onResizeDebounced, { passive: true });
+    window.addEventListener('orientationchange', resetMobilePanelsIfDesktop);
+    // Executa uma vez ao carregar
+    resetMobilePanelsIfDesktop();
     
     // Adiciona efeito ripple em botões (isso conflita com o carrosel, não toque)
     document.querySelectorAll('button:not(.hero-carousel-btn):not(.btn-carrinho), .btn-principal:not(.hero-carousel-btn)').forEach(btn => {
