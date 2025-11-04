@@ -1,3 +1,4 @@
+// TODO - Resolver a porra do problema da Header 
 'use strict';
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -839,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const RATE_LIMIT_KEY = 'cocobrown_last_contact_submit';
         const RATE_LIMIT_MS = 60000; // 1 minuto entre envios
         
-        // Credenciais do EmailJS
+        // Credenciais do EmailJS - Esse são meus, tem que trocar para o deles depois(SE É QUE VÃO FAZER)
         const EMAILJS_PUBLIC_KEY = 'er_tbzxWFUttJHjHW';
         const EMAILJS_SERVICE_ID = 'service_p18ih8a';
         const EMAILJS_TEMPLATE_ID = 'template_2bb77k8';
@@ -880,7 +881,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Validação de email mais rigorosa
+            // Validação(sem spammar meu email)
             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailRegex.test(email)) {
                 successMessage.textContent = 'Por favor, insira um email válido.';
@@ -898,7 +899,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Detecta possíveis tentativas de spam/HTML injection
             const suspiciousPatterns = /<script|javascript:|onerror=|onclick=|<iframe/i;
             if (suspiciousPatterns.test(nome) || suspiciousPatterns.test(mensagem)) {
                 successMessage.textContent = 'Conteúdo inválido detectado.';
@@ -1035,9 +1035,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     const avaliacoesSalvas = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
                     
-                    // Limita o número de avaliações salvas a 50 para prevenir DoS
+                    // Deixa 50, mais que isso tá travando pra crl
                     if (avaliacoesSalvas.length >= 50) {
-                        avaliacoesSalvas.shift(); // Remove a mais antiga
+                        avaliacoesSalvas.shift(); 
                     }
                     
                     avaliacoesSalvas.push(novaAvaliacao);
@@ -1072,7 +1072,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     atualizarCarrinho();
     
-    // Avisa o usuário se conseguiu recuperar um carrinho antigo
+    // Eu acho qeu vou acabar deletando isso depois, ná pratica não vai servir para nada
     if (carrinhoRecuperado) {
         setTimeout(() => {
             const qtdItens = carrinho.reduce((total, item) => total + item.qtde, 0);
@@ -1080,7 +1080,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
     
-    // Adiciona efeito ripple em botões (menos no carrossel pra não conflitar)
+    // Adiciona efeito ripple em botões (isso conflita com o carrosel, não toque)
     document.querySelectorAll('button:not(.hero-carousel-btn):not(.btn-carrinho), .btn-principal:not(.hero-carousel-btn)').forEach(btn => {
         btn.style.position = 'relative';
         btn.style.overflow = 'hidden';

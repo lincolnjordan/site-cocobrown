@@ -1,5 +1,6 @@
+/* Todo - Resolver o problema da header */
 :root {
-    /* Cores do site (escolhidas pq achei bonitas, tá?) */
+    /* Cores do site (Créditos ao adobe colors pq os caras são incapazes de escolher corzinha vtnc) */
     --cor-primaria: #3E2723;              
     --cor-secundaria: #FFF9E6;            
     --cor-destaque: #FF6B35;              
@@ -11,7 +12,7 @@
     --cor-branco: #FFFFFF;
     --cor-sucesso: #00C896;
     
-    /* Z-Index Hierarchy (alguém pediu isso pra não virar um caos) */
+    /* Não toca */
     --z-base: 1;
     --z-negative: -1;
     --z-negative-2: -2;
@@ -88,7 +89,7 @@
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Elementos que NÃO devem transicionar o tema (evita travamento) */
+/* Elementos que NÃO devem transicionar o tema */
 .hero-carousel,
 .hero-carousel *,
 .preloader,
