@@ -916,8 +916,6 @@ body.carrinho-aberto {
 .hero-carousel-slide:nth-child(3)::after {
     background-image: url('imagens/3.jpg');
     animation-name: kenburns-3;
-    background-size: cover;
-    background-position: center center;
 }
 .hero-carousel-slide::before {
     content: '';
@@ -1110,9 +1108,7 @@ body.carrinho-aberto {
         transform: scale(1.45) translate(-8%, -5%);
     }
 }
-.produtos-filtros {
-    display: none; 
-}
+
 /* Grid dos produtos (só tem um no momento, mas tá preparado pra mais) */
 .produtos-grid {
     display: flex;
