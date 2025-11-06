@@ -906,18 +906,18 @@ body.carrinho-aberto {
     overflow: hidden;
 }
 .hero-carousel-slide:nth-child(1)::after {
-    background-image: url('imagens/brownie_prestigio.jpg');
+    background-image: url('imagens/1.jpg');
     animation-name: kenburns-1;
 }
 .hero-carousel-slide:nth-child(2)::after {
-    background-image: url('imagens/brownie_prestigio_2.jpg');
+    background-image: url('imagens/2.jpg');
     animation-name: kenburns-2;
 }
 .hero-carousel-slide:nth-child(3)::after {
-    background-image: url('imagens/brownie_prestigio_3.jpg');
+    background-image: url('imagens/3.jpg');
     animation-name: kenburns-3;
     background-size: cover;
-    background-position: left center;
+    background-position: center center;
 }
 .hero-carousel-slide::before {
     content: '';
@@ -1355,13 +1355,21 @@ body.carrinho-aberto {
 .processo-item {
     position: relative;
     z-index: 1;
-    padding: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 320px;
 }
 .processo-item .processo-descricao {
     margin-top: 1rem;
     font-size: 0.95rem;
     opacity: 0.85;
     line-height: 1.6;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
 }
 .processo-item i {
     font-size: 3.5rem;
@@ -1383,6 +1391,11 @@ body.carrinho-aberto {
     margin-bottom: 0.8rem;
     color: var(--cor-primaria);
     font-weight: 600;
+    min-height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 .secao-equipe {
     padding: 6rem 0;

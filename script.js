@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
         id: 1,
         nome: "Brownie Prestígio",
         preco: 18,
-        imagem: "imagens/brownie_prestigio.jpg",
-        descricao: "A combinação perfeita de brownie de chocolate belga com uma generosa camada de coco cremoso, coberto com chocolate meio amargo. Uma explosão de sabor que derrete na boca!",
+        imagem: "imagens/CardProduto.jpeg",
+        descricao: "A combinação perfeita de brownie de chocolate com uma generosa camada de coco cremoso, coberto com chocolate meio amargo. Uma explosão de sabor que derrete na boca!",
         categoria: "premium",
         badge: "Exclusivo"
         // adicionar mais produtos quando o gti fornecer as imagens (pedimos há 3 semanas...)
@@ -736,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (temItens) {
             let mensagem = 'Olá! Gostaria de fazer o seguinte pedido:\n\n' + carrinho.map(item => `*${item.qtde}x* ${item.nome} - ${formatarPreco(item.preco * item.qtde)}`).join('\n') + `\n\n*Total:* ${formatarPreco(total)}`;
-            btnFinalizar.href = `https://wa.me/5518991698487?text=${encodeURIComponent(mensagem)}`;
+            btnFinalizar.href = `https://wa.me/5518996403882?text=${encodeURIComponent(mensagem)}`;
         }
     }
 
