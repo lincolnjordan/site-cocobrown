@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const produtosDB = [{
         id: 1,
         nome: "Brownie Prestígio",
-        preco: 18,
+        preco: 12.90,
         imagem: "imagens/CardProduto.jpeg",
         descricao: "A combinação perfeita de brownie de chocolate com uma generosa camada de coco cremoso, coberto com chocolate meio amargo. Uma explosão de sabor que derrete na boca!",
         categoria: "premium",

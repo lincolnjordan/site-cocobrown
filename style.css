@@ -1305,7 +1305,7 @@ body.carrinho-aberto {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: var(--gradiente-premium);
+    background: var(--cor-destaque);
     color: #FFFFFF;
     padding: 8px 20px;
     font-size: 0.85rem;
