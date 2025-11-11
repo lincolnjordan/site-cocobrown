@@ -42,10 +42,8 @@
     <header class="cabecalho">
         <div class="container">
             <a href="#inicio" class="logo">
-                <!-- Pqp essa logo tá uma merda) -->
                 <img src="imagens/logomarca_upscayl_4x.png" alt="Cocobrown Logo" class="logo-img">
             </a>
-            <!-- Tem que fazer teste em celular diferente -->
             <nav class="navegacao" id="menu-navegacao" data-menu="suave">
                 <ul class="menu-links">
                     <li><a href="#inicio">Início</a></li>
@@ -56,20 +54,15 @@
                     <li><a href="#contato">Contato</a></li>
                 </ul>
             </nav>
-            <!-- Botões do header: tema (claro/escuro) + carrinho -->
             <div class="header-icones">
-                <!-- tema -->
                 <button class="theme-switch" aria-label="Mudar Tema"><i class="fas fa-sun"></i></button>
-                <!-- carrinho -->
                 <button class="btn-carrinho" aria-label="Abrir Carrinho"><i class="fas fa-shopping-cart"></i><span class="contagem-carrinho">0</span></button>
-                <!-- mobile -->
                 <button class="btn-menu-mobile" aria-label="Abrir Menu" aria-haspopup="true" aria-controls="menu-navegacao" aria-expanded="false"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
 
     <main>
-        <!-- se não tiver 100% eu refaço por js -->
         <section id="inicio" class="hero-carousel">
             <div class="hero-carousel-slider">
                 <div class="hero-carousel-slide">
@@ -99,7 +92,6 @@
             <div class="hero-carousel-dots"></div>
         </section>
 
-        <!-- Vtnc gti -->
         <section id="nossos-brownies" class="secao-produtos" data-anime="scroll">
             <div class="container">
                 <h2>Nosso Brownie Prestígio</h2>
@@ -141,11 +133,9 @@
             </div>
         </section>
 
-        <!-- Cara, eu não faço ideia do que colocar aqui pq ngm fala porra nenhuma -->
         <section id="quem-faz" class="secao-equipe">
             <div class="container">
                 <h2>Quem Faz a Magia</h2>
-                <!-- cade as fotos? -->
                 <div class="equipe-grid">
                     <div class="membro-card" data-anime="scroll">
                         <img src="imagens/equipe/Gustavo.jpg" alt="Foto de Gustavo">
@@ -175,11 +165,9 @@
             </div>
         </section>
 
-        <!-- Nem sei se vão dar feedback nisso aqui, é tudo fake mesmo -->
         <section id="avaliacoes">
             <div class="container">
                 <h2>O Que Nossos Clientes Dizem</h2>
-                <!-- era pro localstorage estar funcionando em todos navegadores(eu só testei no chrome e no edge) -->
                 <div class="avaliacoes-grid" id="avaliacoes-grid">
                     <div class="avaliacao-card">
                         <div class="avaliacao-estrelas"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
@@ -197,7 +185,6 @@
                         <h4>- Ricardo Almeida</h4>
                     </div>
                 </div>
-                <!-- isso aqui vai pegar as avaliações do localstorage, se alguem for mexer, não fode o j pq tá tudo certo la -->
                 <div class="form-avaliacao-container" data-anime="scroll">
                     <h3>Deixe sua Avaliação</h3>
                     <form id="form-add-avaliacao" autocomplete="on">
@@ -258,7 +245,6 @@
             </div>
         </section>
 
-        <!-- gambiarra para receber as avaliações no emaik(a lógica ta inteira no script.js) -->
         <section id="contato" class="secao-contato" data-anime="scroll">
             <div class="container">
                 <h2>Contato e Localização</h2>
@@ -286,7 +272,6 @@
         </section>
     </main>
 
-    <!-- Redes Sociais -->
     <footer class="rodape">
         <div class="container">
             <div class="rodape-social">
@@ -297,7 +282,6 @@
         </div>
     </footer>
 
-    <!-- Backdrop para o carrinho - isso tem que fechar agora -->
     <div class="carrinho-backdrop" id="carrinho-backdrop"></div>
 
     <div class="carrinho-sidebar">
@@ -311,7 +295,6 @@
     </div>
     <a href="https://wa.me/5518996403882?text=Ol%C3%A1%21%20Gostaria%20de%20fazer%20um%20pedido." class="btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Fale conosco pelo WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
-    <!-- overlay-->
     <div id="theme-overlay" class="theme-overlay" aria-hidden="true"></div>
 
     <div id="lightbox" class="modal-overlay">

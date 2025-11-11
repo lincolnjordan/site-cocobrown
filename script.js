@@ -1,8 +1,6 @@
-// TODO - Resolver a porra do problema da Header 
 'use strict';
 document.addEventListener('DOMContentLoaded', function() {
 
-    // validação 
     function sanitizeHTML(str) {
         if (typeof str !== 'string') return '';
         const div = document.createElement('div');
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         descricao: "A combinação perfeita de brownie de chocolate com uma generosa camada de coco cremoso, coberto com chocolate meio amargo. Uma explosão de sabor que derrete na boca!",
         categoria: "premium",
         badge: "Exclusivo"
-        // adicionar mais produtos quando o gti fornecer as imagens (pedimos há 3 semanas...)
     }];
 
     function gerarChecksum(obj) {
@@ -96,11 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderizarProdutos(produtosDB);
 
-
     const toastContainer = document.querySelector('.toast-container');
 
     function showToast(message, type = 'success') {
-        // Notificação 
         if (!toastContainer) return;
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
@@ -116,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         setTimeout(() => toast.classList.add('toast-show'), 10);
         
-        // Remove depois de 4 segundos
         setTimeout(() => {
             toast.classList.remove('toast-show');
             setTimeout(() => toast.remove(), 300);
@@ -142,18 +136,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ===== MODO CLARO/ESCURO (dark mode) =====
     const themeSwitch = document.querySelector('.theme-switch');
     const themeIcon = themeSwitch.querySelector('i');
 
-    // Sincroniza o ícone com o tema atual (lua se escuro, sol se claro)
     function syncThemeIcon() {
         const isDark = document.documentElement.classList.contains('dark-mode');
         themeIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
     }
     syncThemeIcon();
 
-    // Aplica o tema e salva a preferência
     function applyTheme(tema) {
         if (tema === 'dark') {
             document.documentElement.classList.add('dark-mode');
@@ -166,50 +157,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Quando clica no botão de tema, troca entre claro e escuro
-    // (com animação suave se o navegador suportar)
     themeSwitch.addEventListener('click', () => {
         const novoTema = document.documentElement.classList.contains('dark-mode') ? 'light' : 'dark';
         
-        // Se o usuário prefere animações reduzidas, não faz efeito 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             applyTheme(novoTema);
             return;
         }
         
-        // Animação do botão
         themeSwitch.classList.add('transitioning');
         setTimeout(() => themeSwitch.classList.remove('transitioning'), 600);
         
-        // View Transition API (só funciona em Chrome/Edge novos)
-        // alguém testa se isso tá funcionando em outros navegadores ai namoral
         if (document.startViewTransition) {
             document.startViewTransition(() => applyTheme(novoTema));
             return;
         }
         
-        // Se não tiver API nova, usa overlay suave mesmo
         const overlay = document.getElementById('theme-overlay');
         if (overlay) {
-            // Escolhe a cor do overlay baseado no tema novo
             overlay.style.background = novoTema === 'dark' 
                 ? 'radial-gradient(circle at center, rgba(26, 26, 46, 0.95) 0%, rgba(13, 12, 11, 0.98) 60%, #000000 100%)' 
                 : 'radial-gradient(circle at center, rgba(255, 248, 220, 0.95) 0%, rgba(255, 250, 205, 0.98) 60%, #FFF8DC 100%)';
             
-            // Fade in do overlay (300ms)
             overlay.classList.add('active');
             
-            // Aplica o tema no meio (350ms)
             setTimeout(() => {
                 applyTheme(novoTema);
             }, 350);
             
-            // Começa a desaparecer (600ms)
             setTimeout(() => {
                 overlay.classList.add('fading-out');
             }, 600);
             
-            // Remove as classes quando acaba (1100ms)
             setTimeout(() => {
                 overlay.classList.remove('active', 'fading-out');
             }, 1100);
@@ -218,18 +197,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Se o SO do usuário mudar pra modo escuro/claro e ele não salvou preferência, segue o SO
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
         if (!localStorage.getItem('theme')) {
             applyTheme(e.matches ? 'dark' : 'light');
         }
     });
 
-
-
     const faqContainer = document.querySelector('.faq-container');
     if (faqContainer) {
-        // FAQ - clica em uma pergunta e ela abre/fecha a resposta
         faqContainer.addEventListener('click', (e) => {
             const faqPergunta = e.target.closest('.faq-pergunta');
             if (faqPergunta) {
@@ -239,7 +214,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== CARROSSEL DO HERO =====
     const carousel = document.querySelector('.hero-carousel');
     if (carousel) {
         const slider = carousel.querySelector('.hero-carousel-slider');
@@ -250,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentIndex = 0;
         let slideInterval;
 
-        // Cria os pontinhos de navegação (uma por slide)
         if (slides.length > 0) {
             slides.forEach((_, i) => {
                 const dot = document.createElement('div');
@@ -265,44 +238,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const dots = dotsContainer.querySelectorAll('.hero-carousel-dot');
 
-        // Atualiza qual ponto tá destacado
         function updateDots() {
             dots.forEach((dot, i) => dot.classList.toggle('ativo', i === currentIndex));
         }
 
-        // Vai pra um slide específico
         function goToSlide(index) {
             currentIndex = index;
             slider.style.transform = `translateX(-${currentIndex * 100}%)`;
             updateDots();
         }
 
-        // Próximo slide
         function nextSlide() {
             goToSlide((currentIndex + 1) % slides.length);
         }
 
-        // Slide anterior
         function prevSlide() {
             goToSlide((currentIndex - 1 + slides.length) % slides.length);
         }
 
-        // Começa a passar slides automaticamente
         function startInterval() {
             slideInterval = setInterval(nextSlide, 7000);
         }
 
-        // Para e reinicia o intervalo (pra resetar quando o usuário interage)
         function resetInterval() {
             clearInterval(slideInterval);
             startInterval();
         }
         
-        // Pausa quando mouse entra, continua quando sai
         carousel.addEventListener('mouseenter', () => clearInterval(slideInterval));
         carousel.addEventListener('mouseleave', startInterval);
 
-        // Botões de seta
         nextBtn.addEventListener('click', () => {
             nextSlide();
             resetInterval();
@@ -313,7 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
             resetInterval();
         });
         
-        // ===== DETECÇÃO DE SWIPE (TOQUE) =====
         let touchStartXCarousel = 0;
         let touchEndXCarousel = 0;
         let touchStartTime = 0;
@@ -329,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
             handleCarouselSwipe(touchDuration);
         }, { passive: true });
         
-        // Interpreta o swipe (se foi rápido e pro lado, troca slide)
         function handleCarouselSwipe(duration) {
             const swipeThreshold = 50;
             const timeThreshold = 500;
@@ -345,19 +308,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Inicia o carrossel
         if (slides.length > 0) {
             goToSlide(0);
             startInterval();
         }
     }
 
-    // ===== MENU MOBILE =====
     const btnMobile = document.querySelector('.btn-menu-mobile');
     const navegacao = document.querySelector('.navegacao');
     const menuLinks = document.querySelectorAll('.navegacao a');
 
-    // Abre/fecha o menu quando clica no ícone
     function toggleMenu(event) {
         if (event.type === 'touchstart') event.preventDefault();
         navegacao.classList.toggle('ativo');
@@ -365,19 +325,16 @@ document.addEventListener('DOMContentLoaded', function() {
         event.currentTarget.setAttribute('aria-expanded', ativo);
         if (ativo) {
             document.body.classList.add('menu-aberto');
-            // ativa o backdrop quando o menu abre
             const bd = document.getElementById('carrinho-backdrop');
             if (bd) bd.classList.add('ativo');
         } else {
             document.body.classList.remove('menu-aberto');
-            // remove o backdrop somente se o carrinho não estiver aberto
             const bd = document.getElementById('carrinho-backdrop');
             const carrinhoAberto = document.querySelector('.carrinho-sidebar')?.classList.contains('ativo');
             if (bd && !carrinhoAberto) bd.classList.remove('ativo');
         }
     }
 
-    // Detecção de swipe pra fechar o menu arrastando
     if (navegacao) {
         let touchStartX = 0;
         let touchEndX = 0;
@@ -391,14 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
             handleSwipe();
         }, { passive: true });
         
-        // Fecha menu se arrastar pra esquerda (de forma rápida)
         function handleSwipe() {
             if (navegacao.classList.contains('ativo')) {
                 if (touchStartX - touchEndX > 50) {
                     navegacao.classList.remove('ativo');
                     document.body.classList.remove('menu-aberto');
                     btnMobile.setAttribute('aria-expanded', 'false');
-                    // remove backdrop se o carrinho não estiver aberto
                     const bd = document.getElementById('carrinho-backdrop');
                     const carrinhoAberto = document.querySelector('.carrinho-sidebar')?.classList.contains('ativo');
                     if (bd && !carrinhoAberto) bd.classList.remove('ativo');
@@ -412,7 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
         btnMobile.addEventListener('touchstart', toggleMenu);
     }
 
-    // Fecha o menu quando clica em um link
     menuLinks.forEach(link => {
         link.addEventListener('click', () => {
             navegacao.classList.remove('ativo');
@@ -422,13 +376,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const carrinhoAberto = document.querySelector('.carrinho-sidebar')?.classList.contains('ativo');
             if (bd && !carrinhoAberto) bd.classList.remove('ativo');
         });
-    });    // ===== HEADER ESCONDE/MOSTRA AO ROLAR =====
+    });
     const header = document.querySelector('.cabecalho');
     let lastScrollY = window.scrollY;
     if (header) {
         let headerTimeout;
-        // Quando rola pra baixo, esconde o header. Quando rola pra cima, mostra novamente
-        // (alguém testa se tá fluido e sem lag em mobile)
         function handleHeaderScroll() {
             if (headerTimeout) {
                 window.cancelAnimationFrame(headerTimeout);
@@ -449,7 +401,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const animeScrollElements = document.querySelectorAll('[data-anime="scroll"]');
     if (animeScrollElements.length) {
-        // Faz elementos aparecerem com animação quando entram na tela
         const windowMetade = window.innerHeight * 0.7;
 
         function animaScroll() {
@@ -472,7 +423,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', debouncedAnimaScroll, { passive: true });
     }
 
-    // ===== MODAIS (LIGHTBOX + QUICK VIEW) =====
     const lightbox = document.getElementById('lightbox');
     const quickView = document.getElementById('quick-view');
 
@@ -493,7 +443,6 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.querySelector('.modal-fechar').addEventListener('click', () => closeModal(modal));
     });
 
-    // Fecha modal com ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             document.querySelectorAll('.modal-overlay.ativo').forEach(modal => {
@@ -534,12 +483,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }));
         
-        // Efeito 3D removido pq tava lagado
     }
 
     const CART_STORAGE_KEY = 'cocobrown_carrinho';
     const CART_TIMESTAMP_KEY = 'cocobrown_carrinho_timestamp';
-    const CART_EXPIRATION_DAYS = 7; // Carrinho expira após 7 dias (era pra estar funcionando isso daqui)
+    const CART_EXPIRATION_DAYS = 7;
     
     const btnCarrinho = document.querySelector('.btn-carrinho');
     const carrinhoSidebar = document.querySelector('.carrinho-sidebar');
@@ -550,7 +498,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnFinalizar = document.querySelector('.btn-finalizar');
     const btnEsvaziar = document.querySelector('.btn-esvaziar');
     
-    // Verifica se o carrinho tá velho demais
     function verificarExpiracaoCarrinho() {
         const timestamp = localStorage.getItem(CART_TIMESTAMP_KEY);
         if (!timestamp) return false; 
@@ -560,7 +507,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const diasDecorridos = (agora - dataCarrinho) / (1000 * 60 * 60 * 24);
         
         if (diasDecorridos > CART_EXPIRATION_DAYS) {
-            // Carrinho expirou - limpa os dados
             localStorage.removeItem(CART_STORAGE_KEY);
             localStorage.removeItem(CART_TIMESTAMP_KEY);
             console.info(`🛒 Carrinho expirado após ${CART_EXPIRATION_DAYS} dias. Itens removidos.`);
@@ -570,25 +516,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
     
-    // Valida se os dados do carrinho são válidos
     function validarCarrinho(carrinhoData) {
         if (!Array.isArray(carrinhoData)) return [];
         
         return carrinhoData.filter(item => {
-            // Verifica se tem as propriedades
             if (!item || typeof item !== 'object') return false;
             if (!item.id || !item.nome || !item.preco || !item.qtde) return false;
             
-            // Verifica se os valores fazem sentido
             if (typeof item.id !== 'number' || item.id <= 0) return false;
             if (typeof item.preco !== 'number' || item.preco <= 0) return false;
             if (typeof item.qtde !== 'number' || item.qtde <= 0 || item.qtde > 99) return false;
             
             return true;
-        }).slice(0, 50); // Limita a 50 itens eu acho que isso aqui não vai fazer diferença mas vai que algum arrombado tenta
+        }).slice(0, 50);
     }
     
-    // Carregar carrinho com verificação de expiração
     let carrinho = [];
     let carrinhoRecuperado = false;
     if (!verificarExpiracaoCarrinho()) {
@@ -600,7 +542,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function salvarCarrinho() {
-        // Salva o carrinho e atualiza o timestamp
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(carrinho));
         localStorage.setItem(CART_TIMESTAMP_KEY, Date.now().toString());
     }
@@ -717,7 +658,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function atualizarQtde(id, novaQtde) {
         const item = carrinho.find(i => i.id === parseInt(id));
         if (item) {
-            // Limita quantidade entre 1 e 99
             novaQtde = Math.max(1, Math.min(99, parseInt(novaQtde) || 1));
             item.qtde = novaQtde;
             if (item.qtde <= 0) {
@@ -816,22 +756,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Fecha painéis ao clicar no backdrop
     const backdrop = document.getElementById('carrinho-backdrop');
     if (backdrop) {
         backdrop.addEventListener('click', () => {
-            // fecha carrinho, se aberto
             if (carrinhoSidebar && carrinhoSidebar.classList.contains('ativo')) {
                 carrinhoSidebar.classList.remove('ativo');
                 document.body.classList.remove('carrinho-aberto');
             }
-            // fecha menu mobile, se aberto
             if (navegacao && navegacao.classList.contains('ativo')) {
                 navegacao.classList.remove('ativo');
                 document.body.classList.remove('menu-aberto');
                 if (btnMobile) btnMobile.setAttribute('aria-expanded', 'false');
             }
-            // remove backdrop apenas se nenhum painel estiver aberto
             const aindaTemCarrinho = carrinhoSidebar?.classList.contains('ativo');
             const aindaTemMenu = navegacao?.classList.contains('ativo');
             if (!aindaTemCarrinho && !aindaTemMenu) backdrop.classList.remove('ativo');
@@ -867,12 +803,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const successMessage = document.createElement('div');
         successMessage.className = 'form-success-message';
         
-        // ===== FORMULÁRIO DE CONTATO =====
-        // Proteção básica - 1 minuto entre envios - isso aqui tá spammando meu email
         const RATE_LIMIT_KEY = 'cocobrown_last_contact_submit';
-        const RATE_LIMIT_MS = 60000; // 1 minuto entre envios
+        const RATE_LIMIT_MS = 60000;
         
-        // Credenciais do EmailJS - Esse são meus, tem que trocar para o deles depois(SE É QUE VÃO FAZER)
         const EMAILJS_PUBLIC_KEY = 'er_tbzxWFUttJHjHW';
         const EMAILJS_SERVICE_ID = 'service_p18ih8a';
         const EMAILJS_TEMPLATE_ID = 'template_2bb77k8';
@@ -886,7 +819,6 @@ document.addEventListener('DOMContentLoaded', function() {
         formContato.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // Verifica rate limiting (1 minuto entre envios)
             const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
             if (lastSubmit) {
                 const timeSinceLastSubmit = Date.now() - parseInt(lastSubmit);
@@ -904,7 +836,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = this.querySelector('[name="email"]').value.trim();
             const mensagem = this.querySelector('[name="mensagem"]').value.trim();
             
-            // Validações de segurança
             if (nome.length < 3 || nome.length > 100) {
                 successMessage.textContent = 'O nome deve ter entre 3 e 100 caracteres.';
                 successMessage.style.backgroundColor = '#E53935';
@@ -913,7 +844,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Validação(sem spammar meu email)
             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailRegex.test(email)) {
                 successMessage.textContent = 'Por favor, insira um email válido.';
@@ -946,7 +876,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this)
                 .then(() => {
-                    // Salva timestamp do último envio
                     localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
                     formContato.reset();
                     successMessage.textContent = 'Mensagem enviada com sucesso!';
@@ -1067,7 +996,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     const avaliacoesSalvas = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
                     
-                    // Deixa 50, mais que isso tá travando pra crl
                     if (avaliacoesSalvas.length >= 50) {
                         avaliacoesSalvas.shift(); 
                     }
@@ -1104,7 +1032,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     atualizarCarrinho();
     
-    // Eu acho qeu vou acabar deletando isso depois, ná pratica não vai servir para nada
     if (carrinhoRecuperado) {
         setTimeout(() => {
             const qtdItens = carrinho.reduce((total, item) => total + item.qtde, 0);
@@ -1112,26 +1039,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
 
-    // ===== RESPONSIVIDADE: reset de estados ao voltar para desktop =====
     function resetMobilePanelsIfDesktop() {
         const isDesktop = window.matchMedia('(min-width: 993px)').matches;
         const backdropEl = document.getElementById('carrinho-backdrop');
 
         if (isDesktop) {
-            // Fecha menu mobile se estiver aberto
             if (navegacao && navegacao.classList.contains('ativo')) {
                 navegacao.classList.remove('ativo');
                 document.body.classList.remove('menu-aberto');
                 if (btnMobile) btnMobile.setAttribute('aria-expanded', 'false');
             }
 
-            // Mantém o carrinho se estiver aberto; caso contrário, remove backdrop
             const carrinhoAberto = carrinhoSidebar?.classList.contains('ativo');
             if (backdropEl && !carrinhoAberto) backdropEl.classList.remove('ativo');
         }
     }
 
-    // Debounce simples para evitar excesso de chamadas em resize
     let resizeTimeout;
     function onResizeDebounced() {
         clearTimeout(resizeTimeout);
@@ -1140,10 +1063,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('resize', onResizeDebounced, { passive: true });
     window.addEventListener('orientationchange', resetMobilePanelsIfDesktop);
-    // Executa uma vez ao carregar
     resetMobilePanelsIfDesktop();
     
-    // Adiciona efeito ripple em botões (isso conflita com o carrosel, não toque)
     document.querySelectorAll('button:not(.hero-carousel-btn):not(.btn-carrinho), .btn-principal:not(.hero-carousel-btn)').forEach(btn => {
         btn.style.position = 'relative';
         btn.style.overflow = 'hidden';
